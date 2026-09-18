@@ -78,7 +78,7 @@ celery_app.conf.update(
 
     # Ek task maximum 3 baar retry ho sakta hai
     # (task ke retry mechanism ke according).
-    task_max_retries=3,
+    task_max_retries=10,
 
     # Tasks ke liye default queue ka naam "nextgen_tasks" hoga.
     task_default_queue="nextgen_tasks",
