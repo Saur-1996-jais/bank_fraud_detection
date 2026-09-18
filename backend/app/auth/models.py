@@ -19,17 +19,17 @@ class User(BaseUserSchema, table=True):
         default=None, sa_column=Column(pg.TIMESTAMP(timezone=True))
     )
     otp: str = Field(max_length=6, default="")
-    ast_expiry_time: datetime | None = Field(
+    otp_expiry_time: datetime | None = Field(
         default=None, sa_column=Column(pg.TIMESTAMP(timezone=True))
     )
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
-        default=None, sa_column=Column(pg.TIMESTAMP(timezone=True), nullable=False,
+        sa_column=Column(pg.TIMESTAMP(timezone=True), nullable=False,
                                        server_default=text("CURRENT_TIMESTAMP")),
     )
     updated_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
-        default=None, sa_column=Column(pg.TIMESTAMP(timezone=True), nullable=False,
+         sa_column=Column(pg.TIMESTAMP(timezone=True), nullable=False,
                                        onupdate=func.current_timestamp(),
                                        ),
     )

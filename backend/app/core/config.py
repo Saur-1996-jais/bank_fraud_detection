@@ -31,7 +31,7 @@ class Settings(BaseSettings):
 
     OTP_EXPIRATION_MINUTES: int = 3 if ENVIRONMENT == "local" else 5
     LOGIN_ATTEMPTS: int = 3
-    LOGOUT_DURATION_MINUTES: int = 2 if ENVIRONMENT == "local" else 5
+    LOCKOUT_DURATION_MINUTES: int = 2 if ENVIRONMENT == "local" else 5
 
 
 

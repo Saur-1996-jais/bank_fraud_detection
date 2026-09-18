@@ -11,21 +11,21 @@ class SecurityQuestionsSchema(str, Enum):
 
     @classmethod
     def get_description(cls, value: "SecurityQuestionsSchema") -> str:
-        description = {
+        descriptions = {
             cls.MOTHER_MAIDEN_NAME: "what is the name of your mother?",
             cls.CHILDHOOD_FRIEND: "what is the name of your childhood friend?",
             cls.FAVORITE_COLOR: "what is your favorite color?",
             cls.BIRTH_CITY: "what is your birth city?",
         }
-        return description.get(value, "Unknown security question")
+        return descriptions.get(value, "Unknown security question")
 
-class AccountsStatusSchema(str, Enum):
+class AccountStatusSchema(str, Enum):
     ACTIVE = "active"
     INACTIVE = "inactive"
     LOCKED = "locked"
     PENDING = "pending"
 
-class RolChoicesSchema(str, Enum):
+class RoleChoicesSchema(str, Enum):
     CUSTOMER = "customer"
     ACCOUNT_EXECUTIVE = "account_executive"
     BRANCH_MANAGER = "branch_manager"
@@ -34,7 +34,7 @@ class RolChoicesSchema(str, Enum):
     TELLER = "teller"
 
 class BaseUserSchema(SQLModel):
-    username: str | None = Field(default=None, max_length=12)
+    username: str | None = Field(default=None, max_length=12, unique=True)
     email: EmailStr = Field(unique=True, index=True, max_length=255)
     first_name: str = Field(max_length=30)
     middle_name : str | None = Field(max_length=30, default=None)
@@ -44,8 +44,8 @@ class BaseUserSchema(SQLModel):
     is_superuser: bool = False
     security_questions: SecurityQuestionsSchema = Field(max_length=30)
     security_answer: str = Field(max_length=30)
-    account_status: AccountsStatusSchema = Field(default=AccountsStatusSchema.INACTIVE)
-    role: RolChoicesSchema = Field(default=RolChoicesSchema.CUSTOMER)
+    account_status: AccountStatusSchema = Field(default=AccountStatusSchema.INACTIVE)
+    role: RoleChoicesSchema = Field(default=RoleChoicesSchema.CUSTOMER)
 
 class UserCreateSchema(BaseUserSchema):
     password: str = Field(min_length=8, max_length=40)
@@ -58,7 +58,8 @@ class UserCreateSchema(BaseUserSchema):
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail = {
                     "status" : "error",
-                    "message" : "Please ensure that the passwords you entered match",
+                    "message" : "Passwords do not match",
+                    "action" : "Please ensure that the passwords you entered match",
                     }
             )
         return v
