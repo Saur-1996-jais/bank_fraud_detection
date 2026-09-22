@@ -2,8 +2,8 @@ from backend.app.core.config import settings
 from backend.app.core.emails.base import EmailTemplate
 
 class ActivateEmail(EmailTemplate):
-    template_name = "activate.html"
-    template_name_plain = "activate.txt"
+    template_name = "activation.html"
+    template_name_plain = "activation.txt"
     subject = "Activate your Account"
 
 async def send_activation_email(email: str, token: str) -> None:

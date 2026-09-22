@@ -32,7 +32,7 @@ async_session = async_sessionmaker(
 
 # This dependency is going to be used to get the database session, which is going to be
 # used as a dependency for our fast api application
-async def def_session() -> AsyncGenerator[AsyncSession, None]:
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
     session = async_session()
     try:
         yield session

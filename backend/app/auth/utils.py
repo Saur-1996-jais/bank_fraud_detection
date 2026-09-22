@@ -6,6 +6,8 @@ import string
 from backend.app.core.config import settings
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
+from backend.app.core.services.login_otp import send_login_otp_email
+
 
 _ph = PasswordHasher()
 
