@@ -3,7 +3,7 @@ from sqlmodel import SQLModel, Field
 from datetime import date
 from pydantic_extra_types.country import CountryShortName
 from pydantic_extra_types.phone_numbers import PhoneNumber
-from backend.app.user_profile.utils import validate_id_dates
+
 
 class SalutationSchema(str, Enum):
     Mr = "Mr"
@@ -33,7 +33,7 @@ class EmploymentStatusSchema(str, Enum):
     Student = "Student"
     Retired = "Retired"
 
-class ProfileBasSchema(SQLModel):
+class ProfileBaseSchema(SQLModel):
     title: SalutationSchema
     gender: GenderSchema
     date_of_birth: date

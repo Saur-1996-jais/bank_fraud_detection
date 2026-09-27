@@ -1,8 +1,8 @@
-"""ad_profile_table
+"""add_user_profile
 
-Revision ID: 4f197c2afe1e
+Revision ID: 67cab394153e
 Revises: 9093e06cfb4a
-Create Date: 2026-09-27 08:36:06.888170
+Create Date: 2026-09-27 09:30:45.498155
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision: str = '4f197c2afe1e'
+revision: str = '67cab394153e'
 down_revision: Union[str, None] = '9093e06cfb4a'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
