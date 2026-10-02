@@ -1,10 +1,12 @@
 from enum import Enum
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, SQLModel
 from datetime import date
 from pydantic_extra_types.country import CountryShortName
 from pydantic_extra_types.phone_numbers import PhoneNumber
 from pydantic import field_validator
 from backend.app.user_profile.utils import validate_id_dates
+from backend.app.auth.schema import RoleChoicesSchema
+
 
 class SalutationSchema(str, Enum):
     Mr = "Mr"
@@ -104,3 +106,17 @@ class ImageTypeSchema(str, Enum):
     PROFILE_PHOTO = "profile_photo"
     ID_PHOTO = "id_photo"
     SIGNATURE_PHOTO = "signature_photo"
+
+class ProfileResponseSchema(SQLModel):
+    username: str
+    first_name: str
+    middle_name: str
+    last_name: str
+    email: str
+    id_no: str
+    role: str
+    profile: ProfileBaseSchema | None
+
+    class Config:
+        from_attributes = True
+
