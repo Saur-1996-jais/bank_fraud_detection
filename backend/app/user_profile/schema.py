@@ -1,40 +1,16 @@
-from enum import Enum
-from sqlmodel import SQLModel, Field, SQLModel
+from sqlmodel import Field, SQLModel
 from datetime import date
 from pydantic_extra_types.country import CountryShortName
 from pydantic_extra_types.phone_numbers import PhoneNumber
 from pydantic import field_validator
 from backend.app.user_profile.utils import validate_id_dates
-from backend.app.auth.schema import RoleChoicesSchema
-
-
-class SalutationSchema(str, Enum):
-    Mr = "Mr"
-    Mrs = "Mrs"
-    Miss = "Miss"
-
-class GenderSchema(str, Enum):
-    Male = "Male"
-    Female = "Female"
-    Other = "Other"
-
-class MaritalStatusSchema(str, Enum):
-    Married = "Married"
-    Single = "Single"
-    Divorced = "Divorced"
-    Widowed = "Widowed"
-
-class IdentificationTypeSchema(str, Enum):
-    Passport = "Passport"
-    Drivers_Licence = "Drivers_Licence"
-    National_Id = "National_Id"
-
-class EmploymentStatusSchema(str, Enum):
-    Employed = "Employed"
-    Self_Employed = "Self_Employed"
-    Unemployed = "Unemployed"
-    Student = "Student"
-    Retired = "Retired"
+from backend.app.user_profile.enums import (
+EmploymentStatusSchema,
+IdentificationTypeSchema,
+MaritalStatusSchema,
+GenderSchema,
+SalutationSchema
+)
 
 class ProfileBaseSchema(SQLModel):
     title: SalutationSchema
@@ -102,11 +78,6 @@ class ProfileUpdateSchema(ProfileBaseSchema):
             validate_id_dates(values.data["id_issue_date"], v)
         return v
 
-class ImageTypeSchema(str, Enum):
-    PROFILE_PHOTO = "profile_photo"
-    ID_PHOTO = "id_photo"
-    SIGNATURE_PHOTO = "signature_photo"
-
 class ProfileResponseSchema(SQLModel):
     username: str
     first_name: str
@@ -120,3 +91,9 @@ class ProfileResponseSchema(SQLModel):
     class Config:
         from_attributes = True
 
+
+class PaginatedProfileResponseSchema(SQLModel):
+    profiles: list[ProfileResponseSchema]
+    total : int
+    skip: int
+    limit: int

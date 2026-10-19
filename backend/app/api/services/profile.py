@@ -5,14 +5,15 @@ from sqlmodel import col, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from backend.app.auth.models import User
+from backend.app.auth.schema import RoleChoicesSchema
 from backend.app.core.logging import get_logger
 # from backend.app.core.tasks.image_upload import upload_profile_image_task
 # from backend.app.user_profile.enums import ImageTypeEnum
 from backend.app.user_profile.models import Profile
-from backend.app.user_profile.schema import ProfileCreateSchema, ProfileUpdateSchema, ImageTypeSchema
+from backend.app.user_profile.schema import ProfileCreateSchema, ProfileUpdateSchema
 from backend.app.core.tasks.image_upload import upload_profile_image_task
 from typing import BinaryIO
-
+from backend.app.user_profile.enums import ImageTypeSchema
 
 logger = get_logger()
 
@@ -192,50 +193,50 @@ async def get_user_with_profile(user_id: uuid.UUID, session: AsyncSession) -> Us
         )
 
 
-# async def get_all_user_profiles(
-#     session: AsyncSession,
-#     current_user: User,
-#     skip: int = 0,
-#     limit: int = 20,
-# ) -> tuple[list[User], int]:
-#     try:
-#         if current_user.role != RoleChoicesSchema.BRANCH_MANAGER:
-#             raise HTTPException(
-#                 status_code=status.HTTP_403_FORBIDDEN,
-#                 detail={
-#                     "status": "error",
-#                     "message": "Access denied",
-#                     "action": "Only branch managers can access all profiles",
-#                 },
-#             )
-#
-#         count_statement = select(User)
-#
-#         result = await session.exec(count_statement)
-#
-#         total_count = len(result.all())
-#
-#         statement = (
-#             select(User).offset(skip).limit(limit).order_by(col(User.created_at).desc())
-#         )
-#         result = await session.exec(statement)
-#
-#         users = result.all()
-#
-#         for user in users:
-#             await session.refresh(user, ["profile"])
-#
-#         return list(users), total_count
-#
-#     except HTTPException as http_ex:
-#         raise http_ex
-#     except Exception as e:
-#         logger.error(f"Error fetching all user profiles: {e}")
-#         raise HTTPException(
-#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-#             detail={
-#                 "status": "error",
-#                 "message": "Failed to fetch user profiles",
-#                 "action": "Please try again later",
-#             },
-#         )
+async def get_all_user_profiles(
+    session: AsyncSession,
+    current_user: User,
+    skip: int = 0,
+    limit: int = 20,
+) -> tuple[list[User], int]:
+    try:
+        if current_user.role != RoleChoicesSchema.BRANCH_MANAGER:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail={
+                    "status": "error",
+                    "message": "Access denied",
+                    "action": "Only branch managers can access all profiles",
+                },
+            )
+
+        count_statement = select(User)
+
+        result = await session.exec(count_statement)
+
+        total_count = len(result.all())
+
+        statement = (
+            select(User).offset(skip).limit(limit).order_by(col(User.created_at).desc())
+        )
+        result = await session.exec(statement)
+
+        users = result.all()
+
+        for user in users:
+            await session.refresh(user, ["profile"])
+
+        return list(users), total_count
+
+    except HTTPException as http_ex:
+        raise http_ex
+    except Exception as e:
+        logger.error(f"Error fetching all user profiles: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={
+                "status": "error",
+                "message": "Failed to fetch user profiles",
+                "action": "Please try again later",
+            },
+        )

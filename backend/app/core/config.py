@@ -61,6 +61,7 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
+
 cloudinary.config(
     cloud_name = settings.CLOUDINARY_CLOUD_NAME,
     api_keyy= settings.CLOUDINARY_API_KEY,
