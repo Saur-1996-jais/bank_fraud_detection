@@ -9,12 +9,18 @@ class BankAccountBaseSchema(SQLModel):
     currency: AccountCurrencyEnum
     account_status : AccountStatusEnum = Field(default=AccountStatusEnum.Pending)
     account_number: str | None = Field(default=None, unique=True, index=True)
+    account_name: str
     balance: float = Field(default=0.0)
     is_primary: bool = Field(default=False)
     kyc_submitted: bool = Field(default=False)
     kyc_verified: bool = Field(default=False)
     kyc_verified_by: UUID | None = Field(default=None)
     interest_rate: float = Field(default=0.0)
+
+
+
+class BankAccountCreateSchema(BankAccountBaseSchema):
+    account_number: str | None = None
 
 class BankAccountReadSchema(BankAccountBaseSchema):
     id: UUID
