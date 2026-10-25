@@ -4,7 +4,7 @@ from .routes import home
 from backend.app.api.routes.profile import create, update,upload, me, all_profiles
 from backend.app.api.routes.next_of_kin import create as create_next_of_kin, update as update_next_of_kin
 from backend.app.api.routes.next_of_kin import all, delete
-from backend.app.api.routes.bank_account import create as create_bank_account, activate as bank_account_activate
+from backend.app.api.routes.bank_account import create as create_bank_account, activate as bank_account_activate, deposit
 
 api_router = APIRouter()
 api_router.include_router(home.router)
@@ -25,3 +25,4 @@ api_router.include_router(update_next_of_kin.router)
 api_router.include_router(delete.router)
 api_router.include_router(create_bank_account.router)
 api_router.include_router(bank_account_activate.router)
+api_router.include_router(deposit.router)
