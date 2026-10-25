@@ -3,6 +3,8 @@ from backend.app.bank_account.enums import AccountCurrencyEnum
 from backend.app.core.config import settings
 from backend.app.core.logging import get_logger
 from fastapi import HTTPException, status
+from decimal import Decimal, ROUND_HALF_UP
+from typing import Tuple
 
 logger = get_logger()
 
@@ -88,58 +90,58 @@ def generate_account_number(currency: AccountCurrencyEnum) -> str:
         )
 
 
-# EXCHANGE_RATES = {
-#     "USD": {"EUR": Decimal("0.93"), "GBP": Decimal("0.79"), "KES": Decimal("163.50")},
-#     "EUR": {"USD": Decimal("1.08"), "GBP": Decimal("0.75"), "KES": Decimal("176.23")},
-#     "GBP": {"USD": Decimal("1.26"), "EUR": Decimal("1.17"), "KES": Decimal("205.70")},
-#     "KES": {
-#         "USD": Decimal("0.0061"),
-#         "GBP": Decimal("0.0049"),
-#         "EUR": Decimal("0.0057"),
-#     },
-# }
-#
-# CONVERSION_FEE_RATE = Decimal("0.005")
-#
-#
-# def get_exchange_rate(
-#     from_currency: AccountCurrencyEnum, to_currency: AccountCurrencyEnum
-# ) -> Decimal:
-#     if from_currency == to_currency:
-#         return Decimal("1.0")
-#
-#     try:
-#         rate = EXCHANGE_RATES[from_currency.value][to_currency.value]
-#
-#         return rate.quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
-#     except KeyError:
-#         raise HTTPException(
-#             status_code=status.HTTP_400_BAD_REQUEST,
-#             detail={
-#                 "status": "error",
-#                 "message": f"Exchange rate not available for {from_currency.value} to {to_currency.value}",
-#             },
-#         )
-#
-#
-# def calculate_conversion(
-#     amount: Decimal,
-#     from_currency: AccountCurrencyEnum,
-#     to_currency: AccountCurrencyEnum,
-# ) -> Tuple[Decimal, Decimal, Decimal]:
-#
-#     if from_currency == to_currency:
-#         return amount, Decimal("1.0"), Decimal("0")
-#
-#     exchange_rate = get_exchange_rate(from_currency, to_currency)
-#
-#     conversion_fee = (amount * CONVERSION_FEE_RATE).quantize(
-#         Decimal("0.01"), rounding=ROUND_HALF_UP
-#     )
-#
-#     amount_after_fee = amount - conversion_fee
-#
-#     converted_amount = (amount_after_fee * exchange_rate).quantize(
-#         Decimal("0.01"), rounding=ROUND_HALF_UP
-#     )
-#     return converted_amount, exchange_rate, conversion_fee
+EXCHANGE_RATES = {
+    "USD": {"EUR": Decimal("0.93"), "GBP": Decimal("0.79"), "KES": Decimal("163.50")},
+    "EUR": {"USD": Decimal("1.08"), "GBP": Decimal("0.75"), "KES": Decimal("176.23")},
+    "GBP": {"USD": Decimal("1.26"), "EUR": Decimal("1.17"), "KES": Decimal("205.70")},
+    "KES": {
+        "USD": Decimal("0.0061"),
+        "GBP": Decimal("0.0049"),
+        "EUR": Decimal("0.0057"),
+    },
+}
+
+CONVERSION_FEE_RATE = Decimal("0.005")
+
+
+def get_exchange_rate(
+    from_currency: AccountCurrencyEnum, to_currency: AccountCurrencyEnum
+) -> Decimal:
+    if from_currency == to_currency:
+        return Decimal("1.0")
+
+    try:
+        rate = EXCHANGE_RATES[from_currency.value][to_currency.value]
+
+        return rate.quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
+    except KeyError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={
+                "status": "error",
+                "message": f"Exchange rate not available for {from_currency.value} to {to_currency.value}",
+            },
+        )
+
+
+def calculate_conversion(
+    amount: Decimal,
+    from_currency: AccountCurrencyEnum,
+    to_currency: AccountCurrencyEnum,
+) -> Tuple[Decimal, Decimal, Decimal]:
+
+    if from_currency == to_currency:
+        return amount, Decimal("1.0"), Decimal("0")
+
+    exchange_rate = get_exchange_rate(from_currency, to_currency)
+
+    conversion_fee = (amount * CONVERSION_FEE_RATE).quantize(
+        Decimal("0.01"), rounding=ROUND_HALF_UP
+    )
+
+    amount_after_fee = amount - conversion_fee
+
+    converted_amount = (amount_after_fee * exchange_rate).quantize(
+        Decimal("0.01"), rounding=ROUND_HALF_UP
+    )
+    return converted_amount, exchange_rate, conversion_fee
