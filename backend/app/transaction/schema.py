@@ -125,12 +125,12 @@ class TransactionFilterParamsSchema(SQLModel):
     start_date: datetime | None = Query(
         default=None,
         description="Filter transactions from this date (inclusive)",
-        example="2025-01-01T00:00:00Z",
+        examples=["2025-01-01T00:00:00Z"],
     )
     end_date: datetime | None = Query(
         default=None,
         description="Filter transactions until this date (inclusive)",
-        example="2025-12-01T23:59:59Z",
+        example=["2025-12-01T23:59:59Z"],
     )
     transaction_type: TransactionTypeEnum | None = Query(
         default=None, description="Filter by transaction type"
@@ -153,32 +153,31 @@ class TransactionFilterParamsSchema(SQLModel):
     )
 
 
-# class StatementRequestSchema(SQLModel):
-#     start_date: datetime
-#     end_date: datetime
-#     account_number: str | None = Field(
-#         default=None,
-#         min_length=16,
-#         max_length=16,
-#         description="16-digit account number for specific account statements",
-#     )
-#
-#
-# class StatementResponseSchema(SQLModel):
-#     status: str
-#     message: str
-#     task_id: str | None = None
-#     statement_id: str | None = None
-#     generated_at: datetime | None = None
-#     expires_at: datetime | None = None
-#
-#
-# class TransactionReviewSchema(SQLModel):
-#     is_fraud: bool
-#     notes: str | None = None
-#     approve_transaction: bool = False
-#
-#
+class StatementRequestSchema(SQLModel):
+    start_date: datetime
+    end_date: datetime
+    account_number: str | None = Field(
+        default=None,
+        min_length=16,
+        max_length=16,
+        description="16-digit account number for specific account statements",
+    )
+
+class StatementResponseSchema(SQLModel):
+    status: str
+    message: str
+    task_id: str | None = None
+    statement_id: str | None = None
+    generated_at: datetime | None = None
+    expires_at: datetime | None = None
+
+
+class TransactionReviewSchema(SQLModel):
+    is_fraud: bool
+    notes: str | None = None
+    approve_transaction: bool = False
+
+
 # class RiskHistoryParams(SQLModel):
 #     start_date: datetime | None = None
 #     end_date: datetime | None = None
