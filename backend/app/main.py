@@ -8,7 +8,7 @@ from backend.app.core.db import init_db, engine
 from backend.app.core.logging import get_logger
 from fastapi.responses import JSONResponse
 from backend.app.core.health import health_checker, ServiceStatus
-
+from backend.app.core.rate_limit.middleware import RateLimitMiddleware
 import time
 
 
@@ -92,6 +92,6 @@ async def health_check():
         logger.error(f"Health check failed: {e}")
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"status": ServiceStatus.UNHEALTHY, "error": str(e)},
                             )
-
+app.add_middleware(RateLimitMiddleware)
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
